@@ -1,7 +1,7 @@
 package pa1;
 
 public class Node {
-	private int color;
+	private int color; //0 represents red, 1 represents black
 	private int value;
 	private int maxvalue;
 	private Endpoint endpoint;
@@ -11,7 +11,7 @@ public class Node {
 	private Node right;
 	
 	public Node(){
-		color = 0; //0 represents red, 1 represents black
+		color = 0; 
 		value = 0;
 		maxvalue = 0;
 		endpoint = new Endpoint(0,0);
@@ -53,7 +53,7 @@ public class Node {
 		return maxvalue;
 	}
 	
-	public void setMaxValue(){
+	public void setMaxValue(int maxvalue){
 		this.maxvalue = maxvalue;
 	}
 	
