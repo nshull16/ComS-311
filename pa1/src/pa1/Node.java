@@ -89,7 +89,7 @@ public class Node {
 		this.left = left;
 	}
 	
-	public Node gerRight(){
+	public Node getRight(){
 		return right;
 	}
 	
