@@ -15,5 +15,5 @@ public class Endpoint {
 	
 	public int getP(){
 		return this.p;
-	}
+
 }
