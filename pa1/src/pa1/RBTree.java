@@ -40,7 +40,6 @@ public class RBTree {
 		this.root = node;
 	}
 	
-	
 	public void LeftRotate(Node x){
 		Node y = new Node();
 		y = x.getRight();
