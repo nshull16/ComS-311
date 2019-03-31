@@ -1,7 +1,7 @@
 package pa1;
 
 public class Node {
-	private int color;
+	private int color; //0 represents red, 1 represents black
 	private int value;
 	private int maxvalue;
 	private Endpoint endpoint;
@@ -11,8 +11,8 @@ public class Node {
 	private Node right;
 	
 	public Node(){
-		color = 0; //0 represents red, 1 represents black
-		val = 0;
+		color = 0; 
+		value = 0;
 		maxvalue = 0;
 		endpoint = new Endpoint(0,0);
 		max = new Endpoint(0,0);
@@ -23,7 +23,7 @@ public class Node {
 	
 	public Node(Endpoint endpoint){
 		color = 0;
-		val = 0;
+		value = 0;
 		maxvalue = 0;
 		this.endpoint = endpoint;
 		max = endpoint;
@@ -36,24 +36,24 @@ public class Node {
 		return color;
 	}
 	
-	public int setColor(int color){
+	public void setColor(int color){
 		this.color = color;
 	}
 	
 	public int getVal()
 	{
-		return val;
+		return value;
 	}
 	
-	public int setVal(int val){
-		this.val = val;
+	public void setVal(int value){
+		this.value = value;
 	}
 	
 	public int getMaxValue(){
 		return maxvalue;
 	}
 	
-	public int setMaxValue(){
+	public void setMaxValue(int maxvalue){
 		this.maxvalue = maxvalue;
 	}
 	
@@ -82,7 +82,7 @@ public class Node {
 	}
 	
 	public Node getLeft(){
-		return leftt;
+		return left;
 	}
 	
 	public void setLeft(Node left){
