@@ -27,6 +27,10 @@ public class RBTree {
 		return this.size;
 	}
 	
+	public void setSize(int size){
+		this.size = size;
+	}
+	
 	public int getHeight(){
 		if (root == nil){
 			return 0;
@@ -72,6 +76,7 @@ public class RBTree {
 		}
 		newNode.setLeft(this.getNILNode());
 		newNode.setRight(this.getNILNode());
+		update(newNode);
 		InsertNodeFixup(newNode);
 	}
 	
@@ -118,6 +123,7 @@ public class RBTree {
 		}
 		this.getRoot().setColor(1);
 	}
+	
 	public void LeftRotate(Node x){
 		Node y = new Node();
 		y = x.getRight();
@@ -137,6 +143,7 @@ public class RBTree {
 		}
 		y.setLeft(x);
 		x.setParent(y);
+		update(x);
 	}
 	
 	public void RightRotate(Node x){
@@ -158,13 +165,164 @@ public class RBTree {
 		}
 		y.setRight(x);
 		x.setParent(y);
+		update(x);
+	}
+	
+	private void update(Node x){
+		if(x == this.getNILNode()){
+			x.setVal(0);
+			x.setMaxValue(0);
+			x.setMax(this.getNILNode().getMax());
+		}
+		else{
+			x.setVal(x.getLeft().getVal() + x.getP() + x.getRight().getVal());
+			x.setMaxValue(Math.max(x.getLeft().getMaxValue(), Math.max(x.getLeft().getVal() + x.getP(), x.getLeft().getVal() + x.getP() + x.getRight().getMax())));
+			if(x.getLeft().getMax() != this.getNILNode().getMax() && x.getMaxValue() == x.getLeft().getMaxValue()){
+				x.setMax(x.getLeft().getMax());
+			}
+			else if(x.getMaxValue() == (x.getLeft().getVal() + x.getP()){
+				x.setMax(x.getEndpoint());
+			}
+			else if(x.getRight().getMax() != this.getNILNode().getMax() && x.getMaxValue() == (x.getLeft().getVal() + x.getP() + x.getRight().getMaxValue())){
+				x.setMax(x.getRight().getMax());
+			}
+			else{
+				x.setMax(this.getNILNode().getEndpoint());
+			}
+			update(x.getParent());
+		}
+	}
+	
+	private Node Minimum(Node x){
+		Node z = x;
+		while(z.getLeft() != this.getNILNode()){
+			z = z.getLeft();
+		}
+		return z;
+	}
+	
+	public Node Search(Node x, Node k){
+		if(x == this.getNILNode() || k.getEndpoint() == x.getEndpoint()){
+			return x;
+		}
+		if(k.getKey() <= x.getKey()){
+			return Serach(x.getLeft(), k);
+		}
+		else{
+			return Search(x.getRight(), k);
+		}
+	}
+	
+	public void Transplant(Node y, Node z){
+		if(y.getParent() == this.getNILNode()){
+			this.root = z;
+		}
+		else if(y == y.getParent().getLeft()){
+			y.getParent().setLeft(z);
+		}
+		else{
+			y.getParent().setRight(z);
+		}
+		z.setParent(y.getParent());
+	}
+	
+	public void Delete(Node z){
+		Node y = z;
+		Node x;
+		int ycolor = y.getColor();
+		if(z.getLeft() == this.getNILNode()){
+			x = z.getRight();
+			Transplant(z, z.getRight());
+			update(x.getParent());
+		}
+		else if(z.getRight() == this.getNILNode()){
+			x = z.getLeft();
+			Transplant(z, z.getLeft());
+			update(x.getParent());
+		}
+		else{
+			y = Minimum(z.getRight());
+			ycolor = y.getColor();
+			x = y.getRight();
+			if(y.getParent() == z) {
+				x.setParent(y);
+			}
+			else{
+				Transplant(y, y.getRight());
+				y.setRight(z.getRight());
+				y.getRight().setParent(y);
+			}
+			Transplant(z, y);
+			y.setLeft(z.getLeft());
+			y.getLeft().setParent(y);
+			y.setColor(z.getColor());
+			update(x);
+			if(ycolor == 1){
+				DeleteFixup(x);
+			}
+		}
+	}
+	
+	public void DeleteFixup(Node x){
+		while (x != this.getNILNode() && x.getColor() == 1){
+			if(x == x.getParent().getLeft()){
+				Node y = x.getParent().getRight();
+				if(y.getColor() == 0){
+					y.setColor(1);
+					x.getParent().setColor(0);
+					LeftRotate(x.getParent());
+					y = x.getParent().getRight()
+				}
+				if(y.getLeft().getColor() == 1 && y.getRight().getColor() == 1){
+					y.setColor(0);
+					x = x.getParent();
+				}
+				else{
+					if(y.getRight().getColor() == 1){
+						y.getLeft().setColor(1);
+						y.setColor(0);
+						RightRotate(y);
+						y = x.getParent().getRight():
+					}
+					y.setColor(x.getParent().getColor());
+					x.getParent().setColor(1);
+					y.getRight().setColor(1);
+					LeftRotate(x.getParent());
+					x = this.getRoot();
+				}
+			}
+			else{
+				Node y = x.getParent().getLeft();
+				if(y.getColor() == 0){
+					y.setColor(1);
+					x.getParent().setColor(0);
+					RightRotate(x.getParent());
+					y = x.getParent().getLeft()
+				}
+				if(y.getLeft().getColor() == 1 && y.getRight().getColor() == 1){
+					y.setColor(0);
+					x = x.getParent();
+				}
+				else{
+					if(y.getLeft().getColor() == 1){
+						y.getRightt().setColor(1);
+						y.setColor(0);
+						LefttRotate(y);
+						y = x.getParent().getLeft():
+					}
+					y.setColor(x.getParent().getColor());
+					x.getParent().setColor(1);
+					y.getLeftt().setColor(1);
+					RightRotate(x.getParent());
+					x = this.getRoot();
+				}
+			}
+		}
+		x.setColor(1);
 	}
 
 
 	
-	public void setSize(int size){
-		this.size = size;
-	}
 	
 
 

@@ -97,5 +97,11 @@ public class Node {
 		this.right = right;
 	}
 	
+	public int getP(){
+		return endpoint.getP();
+	}
 	
+	public int getKey(){
+		return endpoint.getVal();
+	}
 }
