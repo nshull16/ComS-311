@@ -1,4 +1,4 @@
-package pa1;
+
 
 
 /**
@@ -114,7 +114,7 @@ public class Node {
 	 * Gets the maxValue of the node
 	 * @return the maxValue of the node
 	 */
-	public int getMaxValue(){
+	public int getMaxVal(){
 		return maxvalue;
 	}
 	
@@ -146,7 +146,7 @@ public class Node {
 	 * Gets the max value of the node
 	 * @return the max value of the node
 	 */
-	public Endpoint getMax(){
+	public Endpoint getEmax(){
 		return max;
 	}
 	
@@ -219,6 +219,6 @@ public class Node {
 	 * @return the key of the endpoints value
 	 */
 	public int getKey(){
-		return endpoint.getVal();
+		return endpoint.getValue();
 	}
 }

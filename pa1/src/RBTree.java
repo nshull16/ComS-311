@@ -1,4 +1,4 @@
-package pa1;
+
 /**
  * Class that creates and maintains a red black tree
  * @author Nathan Shull, Tyler Krueger
@@ -30,7 +30,7 @@ public class RBTree {
 		nil.setColor(1);
 		root = nil;
 		root.setParent(nil);
-		root.setEmax(nil.getEndpoint());
+		root.setMax(nil.getEndpoint());
 	}
 	
 	/**
@@ -117,7 +117,7 @@ public class RBTree {
 		x = this.getRoot();
 		this.setSize(this.getSize()+1);
 		
-		while(x != this.getNILNode){
+		while(x != this.getNILNode()){
 			y = x;
 			if(newNode.getKey() < x.getKey()){
 				x = x.getLeft();
@@ -158,11 +158,11 @@ public class RBTree {
 				if(y.getColor() == 0){
 					newNode.getParent().setColor(1);
 					y.setColor(1);
-					newNode.getParent.getParent.setColor(0);
+					newNode.getParent().getParent().setColor(0);
 					newNode = newNode.getParent().getParent();
 				}
 				else{
-					if(newNode == newNode.getParent.getRight()){
+					if(newNode == newNode.getParent().getRight()){
 						newNode = newNode.getParent();
 						LeftRotate(newNode);
 					}
@@ -202,7 +202,7 @@ public class RBTree {
 		Node y = new Node();
 		y = x.getRight();
 		x.setRight(y.getLeft());
-		if(this.getNILNode != y.getLeft()){
+		if(this.getNILNode() != y.getLeft()){
 			y.getLeft().setParent(x);
 		}
 		y.setParent(x.getParent());
@@ -254,19 +254,19 @@ public class RBTree {
 		if(x == this.getNILNode()){
 			x.setVal(0);
 			x.setMaxValue(0);
-			x.setMax(this.getNILNode().getMax());
+			x.setMax(this.getNILNode().getEmax());
 		}
 		else{
 			x.setVal(x.getLeft().getVal() + x.getP() + x.getRight().getVal());
-			x.setMaxValue(Math.max(x.getLeft().getMaxValue(), Math.max(x.getLeft().getVal() + x.getP(), x.getLeft().getVal() + x.getP() + x.getRight().getMax())));
-			if(x.getLeft().getMax() != this.getNILNode().getMax() && x.getMaxValue() == x.getLeft().getMaxValue()){
-				x.setMax(x.getLeft().getMax());
+			x.setMaxValue(Math.max(x.getLeft().getMaxVal(), Math.max(x.getLeft().getVal() + x.getP(), x.getLeft().getVal() + x.getP() + x.getRight().getMaxVal())));
+			if(x.getLeft().getEmax() != this.getNILNode().getEmax() && x.getMaxVal() == x.getLeft().getMaxVal()){
+				x.setMax(x.getLeft().getEmax());
 			}
-			else if(x.getMaxValue() == (x.getLeft().getVal() + x.getP()){
+			else if(x.getMaxVal() == (x.getLeft().getVal() + x.getP())){
 				x.setMax(x.getEndpoint());
 			}
-			else if(x.getRight().getMax() != this.getNILNode().getMax() && x.getMaxValue() == (x.getLeft().getVal() + x.getP() + x.getRight().getMaxValue())){
-				x.setMax(x.getRight().getMax());
+			else if(x.getRight().getEmax() != this.getNILNode().getEmax() && x.getMaxVal() == (x.getLeft().getVal() + x.getP() + x.getRight().getMaxVal())){
+				x.setMax(x.getRight().getEmax());
 			}
 			else{
 				x.setMax(this.getNILNode().getEndpoint());
@@ -278,7 +278,7 @@ public class RBTree {
 	/**
 	 * Method to find the smallest node in a tree
 	 * @param x Starting node
-	 * @return the furthest left node within the subtree of x
+	 * @return the farthest left node within the subtree of x
 	 */
 	private Node Minimum(Node x){
 		Node z = x;
@@ -374,7 +374,7 @@ public class RBTree {
 					y.setColor(1);
 					x.getParent().setColor(0);
 					LeftRotate(x.getParent());
-					y = x.getParent().getRight()
+					y = x.getParent().getRight();
 				}
 				if(y.getLeft().getColor() == 1 && y.getRight().getColor() == 1){
 					y.setColor(0);
@@ -385,7 +385,7 @@ public class RBTree {
 						y.getLeft().setColor(1);
 						y.setColor(0);
 						RightRotate(y);
-						y = x.getParent().getRight():
+						y = x.getParent().getRight();
 					}
 					y.setColor(x.getParent().getColor());
 					x.getParent().setColor(1);
@@ -400,7 +400,7 @@ public class RBTree {
 					y.setColor(1);
 					x.getParent().setColor(0);
 					RightRotate(x.getParent());
-					y = x.getParent().getLeft()
+					y = x.getParent().getLeft();
 				}
 				if(y.getLeft().getColor() == 1 && y.getRight().getColor() == 1){
 					y.setColor(0);
@@ -408,14 +408,14 @@ public class RBTree {
 				}
 				else{
 					if(y.getLeft().getColor() == 1){
-						y.getRightt().setColor(1);
+						y.getRight().setColor(1);
 						y.setColor(0);
-						LefttRotate(y);
-						y = x.getParent().getLeft():
+						LeftRotate(y);
+						y = x.getParent().getLeft();
 					}
 					y.setColor(x.getParent().getColor());
 					x.getParent().setColor(1);
-					y.getLeftt().setColor(1);
+					y.getLeft().setColor(1);
 					RightRotate(x.getParent());
 					x = this.getRoot();
 				}
