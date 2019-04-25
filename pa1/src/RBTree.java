@@ -28,9 +28,9 @@ public class RBTree {
 		size = 0;
 		nil = new Node();
 		nil.setColor(1);
+		nil.setMax(nil.getEndpoint());
 		root = nil;
 		root.setParent(nil);
-		root.setMax(nil.getEndpoint());
 	}
 	
 	/**
@@ -71,12 +71,7 @@ public class RBTree {
 	 * @return the number of levels of a red black tree, as an integer
 	 */
 	public int getHeight(){
-		if (root == nil){
-			return 0;
-		}
-		else{
-			return getHeight(root);
-		}
+		return this.root.getHeight();
 	}
 	
 	/**
@@ -87,40 +82,31 @@ public class RBTree {
 		this.root = node;
 	}
 	
-	/**
-	 * Finds how many levels tall a red black tree is, from Node n
-	 * @param n the height being found
-	 * @return the height of the tree from n, as an integer
-	 */
-	private int getHeight(Node n){
-		if (n == nil){
-			return 0;
-		}
-		else{
-			int leftHeight = getHeight(n.getLeft()) + 1;
-			int rightHeight = getHeight(n.getRight()) + 1;
-			if(leftHeight > rightHeight) {
-				return leftHeight;
-			}
-			return rightHeight;
-		}
-	}
 	
 	/**
 	 * Method to insert a node into a red black tree, and subsequently update the tree
 	 * @param newNode the new node being inserted into the red black tree
 	 */
 	public void InsertNode(Node newNode){
+		this.setSize(this.getSize() + 1);
 		Node y = new Node();
 		y = this.getNILNode();
 		Node x = new Node();
 		x = this.getRoot();
-		this.setSize(this.getSize()+1);
 		
 		while(x != this.getNILNode()){
 			y = x;
 			if(newNode.getKey() < x.getKey()){
 				x = x.getLeft();
+			}
+			else if(newNode.getKey() == x.getKey()) {
+				if(newNode.getP()>= x.getP()) {
+					x = x.getRight();
+					
+				}
+				else {
+					x = x.getRight();
+				}
 			}
 			else{
 				x = x.getRight();
@@ -129,13 +115,21 @@ public class RBTree {
 		newNode.setParent(y);
 		if(y == this.getNILNode()){
 			this.setRoot(newNode);
+			newNode.setColor(1);
 			newNode.setLeft(this.getNILNode());
 			newNode.setRight(this.getNILNode());
-			newNode.setColor(1);
 			return;
 		}
-		else if (newNode.getKey() < newNode.getKey()){
+		else if (newNode.getKey() < y.getKey()){
 			y.setLeft(newNode);
+		}
+		else if(newNode.getKey() == y.getKey()) {
+			if(newNode.getP() >= y.getP()) {
+				y.setLeft(newNode);
+			}
+			else {
+				y.setRight(newNode);
+			}
 		}
 		else{
 			y.setRight(newNode);
@@ -255,10 +249,12 @@ public class RBTree {
 			x.setVal(0);
 			x.setMaxValue(0);
 			x.setMax(this.getNILNode().getEmax());
+			x.setHeight(0);
 		}
 		else{
 			x.setVal(x.getLeft().getVal() + x.getP() + x.getRight().getVal());
 			x.setMaxValue(Math.max(x.getLeft().getMaxVal(), Math.max(x.getLeft().getVal() + x.getP(), x.getLeft().getVal() + x.getP() + x.getRight().getMaxVal())));
+			x.setHeight(Math.max(x.getLeft().getHeight(), x.getRight().getHeight()) + 1);
 			if(x.getLeft().getEmax() != this.getNILNode().getEmax() && x.getMaxVal() == x.getLeft().getMaxVal()){
 				x.setMax(x.getLeft().getEmax());
 			}
@@ -289,21 +285,6 @@ public class RBTree {
 	}
 	
 	/**
-	 * 
-	 */
-	public Node Search(Node x, Node k){
-		if(x == this.getNILNode() || k.getEndpoint() == x.getEndpoint()){
-			return x;
-		}
-		if(k.getKey() <= x.getKey()){
-			return Search(x.getLeft(), k);
-		}
-		else{
-			return Search(x.getRight(), k);
-		}
-	}
-	
-	/**
 	 * Method to move a subtree into a new position
 	 * @param y where the new subtree will be rooted
 	 * @param z Node representing the subtree to be moved
@@ -325,28 +306,34 @@ public class RBTree {
 	 * Method to delete a node from a red black tree, followed by updating the tree
 	 * @param z Node that should be deleted
 	 */
-	public void Delete(Node z){
+	public void Delete(Node z) {
 		Node y = z;
 		Node x;
-		int ycolor = y.getColor();
-		if(z.getLeft() == this.getNILNode()){
+		Node updateNode;
+		this.setSize(this.getSize() - 1);
+		int yellowcolor = y.getColor();
+		if (z.getLeft() == this.getNILNode()) {
 			x = z.getRight();
 			Transplant(z, z.getRight());
-			update(x.getParent());
+			if (x == this.getNILNode()) {
+				updateNode = z.getParent();
+			} else {
+				updateNode = x;
+			}
 		}
-		else if(z.getRight() == this.getNILNode()){
+		else if (z.getRight() == this.getNILNode()) {
 			x = z.getLeft();
 			Transplant(z, z.getLeft());
-			update(x.getParent());
+			updateNode = x;
 		}
-		else{
+		else {
 			y = Minimum(z.getRight());
-			ycolor = y.getColor();
+			yellowcolor = y.getColor();
 			x = y.getRight();
-			if(y.getParent() == z) {
+			if (y.getParent() == z) {
 				x.setParent(y);
 			}
-			else{
+			else {
 				Transplant(y, y.getRight());
 				y.setRight(z.getRight());
 				y.getRight().setParent(y);
@@ -355,10 +342,11 @@ public class RBTree {
 			y.setLeft(z.getLeft());
 			y.getLeft().setParent(y);
 			y.setColor(z.getColor());
-			update(x);
-			if(ycolor == 1){
-				DeleteFixup(x);
-			}
+			updateNode = x;
+		}
+		update(updateNode);
+		if (yellowcolor == 1) {
+			DeleteFixup(x);
 		}
 	}
 	
@@ -367,7 +355,7 @@ public class RBTree {
 	 * @param x node that needs to be checked, and maybe fixed
 	 */
 	public void DeleteFixup(Node x){
-		while (x != this.getNILNode() && x.getColor() == 1){
+		while (x != this.getRoot() && x.getColor() == 1){
 			if(x == x.getParent().getLeft()){
 				Node y = x.getParent().getRight();
 				if(y.getColor() == 0){

@@ -6,34 +6,10 @@ import java.util.*;
 
 public class Intervals {
     private RBTree rbtree;
-    private ArrayList<IntervalCreator> intervalList;
-    private int value;
-    
-    class IntervalCreator{
-        private int id;
-        private Node left;
-        private Node right;
-        
-        IntervalCreator(int ID, Node leftN, Node rightN){
-            id = ID;
-            left = leftN;
-            right = rightN;
-        }
-        
-        public Node getLeft(){
-            return left;
-        }
-        public Node getRight(){
-            return right;
-        }
-        public int getID(){
-            return id;
-        }
-    }
+    private List<Endpoint[]> intervalList;
     
     public Intervals(){
-        value = 1;
-        intervalList = new ArrayList<IntervalCreator>();
+        intervalList = new ArrayList<Endpoint[]>();
         rbtree = new RBTree();
     }
     
@@ -43,10 +19,11 @@ public class Intervals {
         Endpoint left = new Endpoint(a, 1);
         Node leftNode = new Node(left);
         Node rightNode = new Node(right);
+        Endpoint[] newInterval = {left, right};
+        intervalList.add(newInterval);
         this.rbtree.InsertNode(leftNode);
         this.rbtree.InsertNode(rightNode);
-        intervalList.add(new IntervalCreator(value, leftNode, rightNode));
-        value++;
+
     }
     
     
@@ -58,6 +35,10 @@ public class Intervals {
         return rbtree.getRoot().getEmax().getValue();
     }
     
+    public List<Endpoint[]> getList(){
+    	return this.intervalList;
+    }
+    
     public boolean intervalDelete(int intervalID){
         if(intervalID < 1 || intervalID > intervalList.size()) {
         	return false;
@@ -65,9 +46,9 @@ public class Intervals {
         if(intervalList.get(intervalID - 1) == null) {
         	return false;
         }
-        IntervalCreator incr = intervalList.get(intervalID - 1);
-        this.rbtree.Delete(incr.getLeft());
-        this.rbtree.Delete(incr.getRight());
+        Endpoint[] e = intervalList.get(intervalID - 1);
+        this.rbtree.Delete(e[0].getNode());
+        this.rbtree.Delete(e[0].getNode());
         intervalList.set(intervalID - 1, null);
         return true;
         

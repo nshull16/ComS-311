@@ -1,6 +1,3 @@
-
-
-
 /**
  * Class to represent a single node within a red black tree
  * @author Nathan Shull, Tyler Krueger
@@ -46,6 +43,7 @@ public class Node {
 	 * Right child of the node
 	 */
 	private Node right;
+	private int height;
 	
 	/**
 	 * Constructor for a node object. All nodes have the following properties:
@@ -60,6 +58,7 @@ public class Node {
 		parent = null;
 		left = null;
 		right = null;
+		height = 0;
 	}
 	
 	/**
@@ -75,6 +74,7 @@ public class Node {
 		parent = null;
 		left = null;
 		right = null;
+		height = 0;
 	}
 	
 	/**
@@ -220,5 +220,13 @@ public class Node {
 	 */
 	public int getKey(){
 		return endpoint.getValue();
+	}
+	
+	public int getHeight() {
+		return height;
+	}
+	
+	public void setHeight(int height) {
+		this.height = height;
 	}
 }
