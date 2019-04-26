@@ -18,19 +18,19 @@ public class RBTree {
 	/**
 	 * Nil node
 	 */
-	private Node nil;
+	private Node sentinel;
 	
 	/**
 	 * Constructor for a red black tree. Each red black tree will have a root node, nil node, and size
 	 */
-	public RBTree(){
+	public RBTree() {
 		root = new Node();
+		sentinel = new Node();
+		sentinel.setColor(1);
+		sentinel.setEmax(sentinel.getEndpoint());
+		root = sentinel;
+		root.setParent(sentinel);
 		size = 0;
-		nil = new Node();
-		nil.setColor(1);
-		nil.setMax(nil.getEndpoint());
-		root = nil;
-		root.setParent(nil);
 	}
 	
 	/**
@@ -46,7 +46,7 @@ public class RBTree {
 	 * @return the nil node of a red black tree
 	 */
 	public Node getNILNode(){
-		return this.nil;
+		return this.sentinel;
 	}
 	
 	/**
@@ -87,101 +87,93 @@ public class RBTree {
 	 * Method to insert a node into a red black tree, and subsequently update the tree
 	 * @param newNode the new node being inserted into the red black tree
 	 */
-	public void InsertNode(Node newNode){
+	public void RBInsert(Node z) {
 		this.setSize(this.getSize() + 1);
 		Node y = new Node();
 		y = this.getNILNode();
 		Node x = new Node();
 		x = this.getRoot();
 		
-		while(x != this.getNILNode()){
+		while(x != this.getNILNode()) {
 			y = x;
-			if(newNode.getKey() < x.getKey()){
+			if (z.getKey() < x.getKey()) {
 				x = x.getLeft();
-			}
-			else if(newNode.getKey() == x.getKey()) {
-				if(newNode.getP()>= x.getP()) {
-					x = x.getRight();
-					
-				}
-				else {
+			} else if (z.getKey() == x.getKey()) {
+				if (z.getP() >= x.getP()) {
+					x = x.getLeft();
+				} else {
 					x = x.getRight();
 				}
-			}
-			else{
+			} else {
 				x = x.getRight();
 			}
 		}
-		newNode.setParent(y);
-		if(y == this.getNILNode()){
-			this.setRoot(newNode);
-			newNode.setColor(1);
-			newNode.setLeft(this.getNILNode());
-			newNode.setRight(this.getNILNode());
+		z.setParent(y);
+		if (y == this.getNILNode()) {
+			this.setRoot(z);
+			z.setColor(1);
+			z.setLeft(this.getNILNode());
+			z.setRight(this.getNILNode());
 			return;
-		}
-		else if (newNode.getKey() < y.getKey()){
-			y.setLeft(newNode);
-		}
-		else if(newNode.getKey() == y.getKey()) {
-			if(newNode.getP() >= y.getP()) {
-				y.setLeft(newNode);
+		} else if (z.getKey() < y.getKey()) {
+			y.setLeft(z);
+		} else if (z.getKey() == y.getKey()) {
+			if (z.getP() >= y.getP()) {
+				y.setLeft(z);
+			} else {
+				y.setRight(z);
 			}
-			else {
-				y.setRight(newNode);
-			}
+		} else {
+			y.setRight(z);
 		}
-		else{
-			y.setRight(newNode);
-		}
-		newNode.setLeft(this.getNILNode());
-		newNode.setRight(this.getNILNode());
-		update(newNode);
-		InsertNodeFixup(newNode);
+		z.setLeft(this.getNILNode());
+		z.setRight(this.getNILNode());
+		updateNodeValues(z);
+		RBInsertFixup(z);
 	}
 	
 	/**
 	 * Method to keep the red black tree in check with the required rules/properties
 	 * @param newNode node that needs to be checked, and maybe fixed
 	 */
-	public void InsertNodeFixup(Node newNode){
-		while(newNode.getParent().getColor() == 0){
-			if(newNode.getParent() == newNode.getParent().getParent().getLeft()){
+	public void RBInsertFixup(Node z) {
+		while (z.getParent().getColor() == 0) {
+			if (z.getParent() == z.getParent().getParent().getLeft()) {
 				Node y = new Node();
-				y = newNode.getParent().getParent().getRight();
-				if(y.getColor() == 0){
-					newNode.getParent().setColor(1);
+				y = z.getParent().getParent().getRight();
+				if (y.getColor() == 0) {
+					z.getParent().setColor(1);
 					y.setColor(1);
-					newNode.getParent().getParent().setColor(0);
-					newNode = newNode.getParent().getParent();
+					z.getParent().getParent().setColor(0);
+					z = z.getParent().getParent();
 				}
-				else{
-					if(newNode == newNode.getParent().getRight()){
-						newNode = newNode.getParent();
-						LeftRotate(newNode);
+				else {
+					if (z == z.getParent().getRight()) {
+						z = z.getParent();
+						LeftRotate(z);
 					}
-					newNode.getParent().setColor(1);
-					newNode.getParent().getParent().setColor(0);
-					RightRotate(newNode.getParent().getParent());
+					z.getParent().setColor(1);
+					z.getParent().getParent().setColor(0);
+					RightRotate(z.getParent().getParent());
 				}
 			}
-			else{
+			else {
 				Node y = new Node();
-				y = newNode.getParent().getParent().getLeft();
-				if(y.getColor() == 0){
-					newNode.getParent().setColor(1);
+				y = z.getParent().getParent().getLeft();
+				if (y.getColor() == 0) {
+					z.getParent().setColor(1);
 					y.setColor(1);
-					newNode.getParent().getParent().setColor(0);
-					newNode = newNode.getParent().getParent();
+					z.getParent().getParent().setColor(0);
+					z = z.getParent().getParent();
 				}
-				else{
-					if(newNode == newNode.getParent().getLeft()){
-						newNode = newNode.getParent();
-						RightRotate(newNode);
+				else {
+					if (z == z.getParent().getLeft()) {
+						z = z.getParent();
+						RightRotate(z);
 					}
-					newNode.getParent().setColor(1);
-					newNode.getParent().getParent().setColor(0);
-					LeftRotate(newNode.getParent().getParent());
+					z.getParent().setColor(1);
+					z.getParent().getParent().setColor(0);
+					LeftRotate(z.getParent().getParent());
 				}
 			}
 		}
@@ -192,82 +184,79 @@ public class RBTree {
 	 * Method to rotate nodes to the left, around a given node
 	 * @param x node to specify where the rotation will occur
 	 */
-	public void LeftRotate(Node x){
+	public void LeftRotate(Node x) {
 		Node y = new Node();
 		y = x.getRight();
 		x.setRight(y.getLeft());
-		if(this.getNILNode() != y.getLeft()){
+		if (y.getLeft() != this.getNILNode()) {
 			y.getLeft().setParent(x);
 		}
 		y.setParent(x.getParent());
-		if(x.getParent() == this.getNILNode()){
+		if (x.getParent() == this.getNILNode()) {
 			this.setRoot(y);
 		}
-		else if(x == x.getParent().getLeft()){
+		else if (x == x.getParent().getLeft()) {
 			x.getParent().setLeft(y);
 		}
-		else{
+		else { 
 			x.getParent().setRight(y);
 		}
 		y.setLeft(x);
 		x.setParent(y);
-		update(x);
+		updateNodeValues(x);
 	}
 	
 	/**
 	 * Method to rotate nodes to the right, around a given node
 	 * @param x node to specify where the roation will occur
 	 */
-	public void RightRotate(Node x){
+	public void RightRotate(Node x) {
 		Node y = new Node();
 		y = x.getLeft();
 		x.setLeft(y.getRight());
-		if(y.getRight() != this.getNILNode()){
+		if (y.getRight() != this.getNILNode()) {
 			y.getRight().setParent(x);
 		}
 		y.setParent(x.getParent());
-		if(x.getParent() == this.getNILNode()){
+		if (x.getParent() == this.getNILNode()) {
 			this.setRoot(y);
 		}
-		else if(x == x.getParent().getLeft()){
+		else if (x == x.getParent().getLeft()) {
 			x.getParent().setLeft(y);
 		}
-		else{
+		else {
 			x.getParent().setRight(y);
 		}
 		y.setRight(x);
 		x.setParent(y);
-		update(x);
+		updateNodeValues(x);
 	}
 	
 	/**
 	 * Method to update the endpoint max, value, and max value. This will be neccessary when a node is inserted or deleted
 	 * @param x Node where the update checks will start, and will traverse up the tree from there
 	 */
-	private void update(Node x){
-		if(x == this.getNILNode()){
+	private void updateNodeValues(Node x) {
+		if(x == this.getNILNode()) {
 			x.setVal(0);
-			x.setMaxValue(0);
-			x.setMax(this.getNILNode().getEmax());
+			x.setMaxVal(0);
+			x.setEmax(this.getNILNode().getEmax());
 			x.setHeight(0);
-		}
-		else{
+		} else {
 			x.setVal(x.getLeft().getVal() + x.getP() + x.getRight().getVal());
-			x.setMaxValue(Math.max(x.getLeft().getMaxVal(), Math.max(x.getLeft().getVal() + x.getP(), x.getLeft().getVal() + x.getP() + x.getRight().getMaxVal())));
+			x.setMaxVal(Math.max(x.getLeft().getMaxVal(),
+					Math.max(x.getLeft().getVal() + x.getP(), x.getLeft().getVal() + x.getP() + x.getRight().getMaxVal())));
 			x.setHeight(Math.max(x.getLeft().getHeight(), x.getRight().getHeight()) + 1);
-			if(x.getLeft().getEmax() != this.getNILNode().getEmax() && x.getMaxVal() == x.getLeft().getMaxVal()){
-				x.setMax(x.getLeft().getEmax());
+			if(x.getLeft().getEmax() != this.getNILNode().getEmax() && x.getMaxVal() == x.getLeft().getMaxVal()) {
+				x.setEmax(x.getLeft().getEmax());
+			} else if (x.getMaxVal() == (x.getLeft().getVal() + x.getP())) {
+				x.setEmax(x.getEndpoint());
+			} else if (x.getRight().getEmax() != this.getNILNode().getEmax() && x.getMaxVal() == (x.getLeft().getVal() + x.getP() + x.getRight().getMaxVal())) {
+				x.setEmax(x.getRight().getEmax());
+			} else {
+				x.setEmax(this.getNILNode().getEndpoint());
 			}
-			else if(x.getMaxVal() == (x.getLeft().getVal() + x.getP())){
-				x.setMax(x.getEndpoint());
-			}
-			else if(x.getRight().getEmax() != this.getNILNode().getEmax() && x.getMaxVal() == (x.getLeft().getVal() + x.getP() + x.getRight().getMaxVal())){
-				x.setMax(x.getRight().getEmax());
-			}
-			else{
-				x.setMax(this.getNILNode().getEndpoint());
-			}
-			update(x.getParent());
+			updateNodeValues(x.getParent());
 		}
 	}
 	
@@ -289,32 +278,32 @@ public class RBTree {
 	 * @param y where the new subtree will be rooted
 	 * @param z Node representing the subtree to be moved
 	 */
-	public void Transplant(Node y, Node z){
-		if(y.getParent() == this.getNILNode()){
-			this.root = z;
+	private void RBTransplant(Node u, Node v) {
+		if (u.getParent() == this.getNILNode()) {
+			this.root = v;
 		}
-		else if(y == y.getParent().getLeft()){
-			y.getParent().setLeft(z);
+		else if (u == u.getParent().getLeft()) {
+			u.getParent().setLeft(v);
 		}
-		else{
-			y.getParent().setRight(z);
+		else {
+			u.getParent().setRight(v);
 		}
-		z.setParent(y.getParent());
+		v.setParent(u.getParent());
 	}
 	
 	/**
 	 * Method to delete a node from a red black tree, followed by updating the tree
 	 * @param z Node that should be deleted
 	 */
-	public void Delete(Node z) {
+	public void RBDeletion(Node z) {
 		Node y = z;
 		Node x;
 		Node updateNode;
 		this.setSize(this.getSize() - 1);
-		int yellowcolor = y.getColor();
+		int yOC = y.getColor();
 		if (z.getLeft() == this.getNILNode()) {
 			x = z.getRight();
-			Transplant(z, z.getRight());
+			RBTransplant(z, z.getRight());
 			if (x == this.getNILNode()) {
 				updateNode = z.getParent();
 			} else {
@@ -323,30 +312,30 @@ public class RBTree {
 		}
 		else if (z.getRight() == this.getNILNode()) {
 			x = z.getLeft();
-			Transplant(z, z.getLeft());
+			RBTransplant(z, z.getLeft());
 			updateNode = x;
 		}
 		else {
 			y = Minimum(z.getRight());
-			yellowcolor = y.getColor();
+			yOC = y.getColor();
 			x = y.getRight();
 			if (y.getParent() == z) {
 				x.setParent(y);
 			}
 			else {
-				Transplant(y, y.getRight());
+				RBTransplant(y, y.getRight());
 				y.setRight(z.getRight());
 				y.getRight().setParent(y);
 			}
-			Transplant(z, y);
+			RBTransplant(z, y);
 			y.setLeft(z.getLeft());
 			y.getLeft().setParent(y);
 			y.setColor(z.getColor());
 			updateNode = x;
 		}
-		update(updateNode);
-		if (yellowcolor == 1) {
-			DeleteFixup(x);
+		updateNodeValues(updateNode);
+		if (yOC == 1) {
+			RBDeleteFixup(x);
 		}
 	}
 	
@@ -354,56 +343,56 @@ public class RBTree {
 	 * Method to keep the red black tree in check with the required rules/properties
 	 * @param x node that needs to be checked, and maybe fixed
 	 */
-	public void DeleteFixup(Node x){
-		while (x != this.getRoot() && x.getColor() == 1){
-			if(x == x.getParent().getLeft()){
-				Node y = x.getParent().getRight();
-				if(y.getColor() == 0){
-					y.setColor(1);
+	private void RBDeleteFixup(Node x) {
+		while (x != this.getRoot() && x.getColor() == 1) {
+			if (x == x.getParent().getLeft()) {
+				Node w = x.getParent().getRight();
+				if (w.getColor() == 0) {
+					w.setColor(1);
 					x.getParent().setColor(0);
 					LeftRotate(x.getParent());
-					y = x.getParent().getRight();
+					w = x.getParent().getRight();
 				}
-				if(y.getLeft().getColor() == 1 && y.getRight().getColor() == 1){
-					y.setColor(0);
+				if (w.getLeft().getColor() == 1 && w.getRight().getColor() == 1) {
+					w.setColor(0);
 					x = x.getParent();
 				}
-				else{
-					if(y.getRight().getColor() == 1){
-						y.getLeft().setColor(1);
-						y.setColor(0);
-						RightRotate(y);
-						y = x.getParent().getRight();
+				else {
+					if (w.getRight().getColor() == 1) {
+						w.getLeft().setColor(1);
+						w.setColor(0);
+						RightRotate(w);
+						w = x.getParent().getRight();
 					}
-					y.setColor(x.getParent().getColor());
+					w.setColor(x.getParent().getColor());
 					x.getParent().setColor(1);
-					y.getRight().setColor(1);
+					w.getRight().setColor(1);
 					LeftRotate(x.getParent());
 					x = this.getRoot();
 				}
 			}
-			else{
-				Node y = x.getParent().getLeft();
-				if(y.getColor() == 0){
-					y.setColor(1);
+			else {
+				Node w = x.getParent().getLeft();
+				if (w.getColor() == 0) {
+					w.setColor(1);
 					x.getParent().setColor(0);
 					RightRotate(x.getParent());
-					y = x.getParent().getLeft();
+					w = x.getParent().getLeft();
 				}
-				if(y.getLeft().getColor() == 1 && y.getRight().getColor() == 1){
-					y.setColor(0);
+				if (w.getLeft().getColor() == 1 && w.getRight().getColor() == 1) {
+					w.setColor(0);
 					x = x.getParent();
 				}
-				else{
-					if(y.getLeft().getColor() == 1){
-						y.getRight().setColor(1);
-						y.setColor(0);
-						LeftRotate(y);
-						y = x.getParent().getLeft();
+				else {
+					if (w.getLeft().getColor() == 1) {
+						w.getRight().setColor(1);
+						w.setColor(0);
+						LeftRotate(w);
+						w = x.getParent().getLeft();
 					}
-					y.setColor(x.getParent().getColor());
+					w.setColor(x.getParent().getColor());
 					x.getParent().setColor(1);
-					y.getLeft().setColor(1);
+					w.getLeft().setColor(1);
 					RightRotate(x.getParent());
 					x = this.getRoot();
 				}

@@ -12,12 +12,12 @@ public class Node {
 	/**
 	 * Value field of a node
 	 */
-	private int value;
+	private int val;
 	
 	/**
 	 * Maximum sum of p values from a node and the subtrees within it
 	 */
-	private int maxvalue;
+	private int maxVal;
 	
 	/**
 	 * Endpoint for the given node
@@ -27,7 +27,7 @@ public class Node {
 	/**
 	 * The endpoint with the maximum overlap
 	 */
-	private Endpoint max;
+	private Endpoint emax;
 	
 	/**
 	 * Parent node of the node
@@ -51,10 +51,10 @@ public class Node {
 	 */
 	public Node(){
 		color = 0; 
-		value = 0;
-		maxvalue = 0;
+		val = 0;
+		maxVal = 0;
 		endpoint = new Endpoint(0,0);
-		max = new Endpoint(0,0);
+		emax = new Endpoint(0,0);
 		parent = null;
 		left = null;
 		right = null;
@@ -67,14 +67,15 @@ public class Node {
 	 */
 	public Node(Endpoint endpoint){
 		color = 0;
-		value = 0;
-		maxvalue = 0;
-		this.endpoint = endpoint;
-		max = endpoint;
 		parent = null;
 		left = null;
 		right = null;
+		val = 0;
+		maxVal = 0;
 		height = 0;
+		this.endpoint = endpoint;
+		this.endpoint.setNode(this);
+		emax = endpoint;
 	}
 	
 	/**
@@ -99,15 +100,15 @@ public class Node {
 	 */
 	public int getVal()
 	{
-		return value;
+		return val;
 	}
 	
 	/**
 	 * Sets the value of the node
 	 * @param val Integer value to set the value of the node to
 	 */
-	public void setVal(int value){
-		this.value = value;
+	public void setVal(int val){
+		this.val = val;
 	}
 	
 	/**
@@ -115,15 +116,15 @@ public class Node {
 	 * @return the maxValue of the node
 	 */
 	public int getMaxVal(){
-		return maxvalue;
+		return maxVal;
 	}
 	
 	/**
 	 * Sets the maxValue of the node
-	 * @param maxValue the maxValue the node should be set to
+	 * @param maxVal the maxValue the node should be set to
 	 */
-	public void setMaxValue(int maxvalue){
-		this.maxvalue = maxvalue;
+	public void setMaxValue(int maxVal){
+		this.maxVal = maxVal;
 	}
 	
 	/**
@@ -140,6 +141,7 @@ public class Node {
 	 */
 	public void setEndpoint(Endpoint endpoint){
 		this.endpoint = endpoint;
+		this.endpoint.setNode(this);
 	}
 	
 	/**
@@ -147,15 +149,15 @@ public class Node {
 	 * @return the max value of the node
 	 */
 	public Endpoint getEmax(){
-		return max;
+		return emax;
 	}
 	
 	/**
 	 * Sets the max value of the node
-	 * @param max The endpoint to be used for calculating max
+	 * @param emax The endpoint to be used for calculating max
 	 */
-	public void setMax(Endpoint max){
-		this.max = max;
+	public void setMax(Endpoint emax){
+		this.emax = emax;
 	}
 	
 	/**
