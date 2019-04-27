@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Intervals {
-    private RBTree rbtree;
+    private RBTree rbTree;
     private List<Endpoint[]> intervalList;
     
     public Intervals(){

@@ -400,10 +400,4 @@ public class RBTree {
 		}
 		x.setColor(1);
 	}
-
-
-	
-	
-
-
 }

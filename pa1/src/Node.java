@@ -123,7 +123,7 @@ public class Node {
 	 * Sets the maxValue of the node
 	 * @param maxVal the maxValue the node should be set to
 	 */
-	public void setMaxValue(int maxVal){
+	public void setMaxVal(int maxVal){
 		this.maxVal = maxVal;
 	}
 	
@@ -156,7 +156,7 @@ public class Node {
 	 * Sets the max value of the node
 	 * @param emax The endpoint to be used for calculating max
 	 */
-	public void setMax(Endpoint emax){
+	public void setEmax(Endpoint emax){
 		this.emax = emax;
 	}
 	
