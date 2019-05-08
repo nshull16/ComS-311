@@ -1,19 +1,9 @@
 
-/**
- * Class that creates and maintains a red black tree
- * @author Nathan Shull, Tyler Krueger
- *
- */
 public class RBTree {
 	/**
-	 * Root node
+	 * Root node of the tree
 	 */
 	private Node root;
-	
-	/**
-	 * Size of the red black tree, number of nodes
-	 */
-	private int size;
 	
 	/**
 	 * Nil node
@@ -21,73 +11,79 @@ public class RBTree {
 	private Node sentinel;
 	
 	/**
-	 * Constructor for a red black tree. Each red black tree will have a root node, nil node, and size
+	 * Number of nodes in the RBT
+	 */
+	private int size;
+	
+	/**
+	 * Constructor for a Red Black Tree
+	 * Each instance of a Red Black Tree will have a root, sentinel, and size
 	 */
 	public RBTree() {
 		root = new Node();
 		sentinel = new Node();
 		sentinel.setColor(1);
-		sentinel.setEmax(sentinel.getEndpoint());
+		sentinel.setMax(sentinel.getEndpoint());
 		root = sentinel;
 		root.setParent(sentinel);
 		size = 0;
 	}
 	
 	/**
-	 * Gets the root node of a red black tree
-	 * @return the root of the red black tree
+	 * Method for getting the root node of a RBT
+	 * @return the root of the Red Black Tree
 	 */
-	public Node getRoot(){
+	public Node getRoot() {
 		return this.root;
 	}
 	
 	/**
-	 * Gets the nil node of a red black tree
-	 * @return the nil node of a red black tree
+	 * Method for setting the root node in a RBT
+	 * @param n A node object
 	 */
-	public Node getNILNode(){
+	public void setRoot(Node n) {
+		this.root = n;
+	}
+	
+	/**
+	 * Method for getting the sentinel or nil node for a RBT
+	 * @return the nil node in the RBT
+	 */
+	public Node getNILNode() {
 		return this.sentinel;
 	}
 	
 	/**
-	 * Gets the number of internal nodes of a red black tree
-	 * @return number of nodes of a red black tree, as an integer
+	 * Method for getting the size or number of internal nodes in a RBT
+	 * @return integer value of number of nodes in the RBT
 	 */
-	public int getSize(){
+	public int getSize() {
+	
 		return this.size;
 	}
 	
 	/**
-	 * Sets the number of internal nodes of a red black tree
-	 * @return the nuber of nodes of a red black tree
+	 * Method for setting the number of internal nodes in a RBT
+	 * @param size Number of nodes in the RBT
 	 */
-	public void setSize(int size){
+	public void setSize(int size) {
 		this.size = size;
 	}
-	
+
 	/**
-	 * Gets the number of levels of a red black tree
-	 * 
-	 * @return the number of levels of a red black tree, as an integer
+	 * Method for finding how many levels tall a RBT is
+	 * @return Integer value representing how many levels tall a RBT is
 	 */
-	public int getHeight(){
+	public int getHeight() {
 		return this.root.getHeight();
 	}
 	
 	/**
-	 * Sets the root node of a red black tree
-	 * @param n a Node object
+	 * Method for inserting a node into a RBT
+	 * It will then call for node values to be updated and RBT to be fixed up
+	 * @param newNode Node to be inserted
 	 */
-	public void setRoot(Node node){
-		this.root = node;
-	}
-	
-	
-	/**
-	 * Method to insert a node into a red black tree, and subsequently update the tree
-	 * @param newNode the new node being inserted into the red black tree
-	 */
-	public void RBInsert(Node z) {
+	public void RBInsert(Node newNode) {
 		this.setSize(this.getSize() + 1);
 		Node y = new Node();
 		y = this.getNILNode();
@@ -96,45 +92,48 @@ public class RBTree {
 		
 		while(x != this.getNILNode()) {
 			y = x;
-			if (z.getKey() < x.getKey()) {
+			if (newNode.getKey() < x.getKey()) {
 				x = x.getLeft();
-			} else if (z.getKey() == x.getKey()) {
-				if (z.getP() >= x.getP()) {
+			}
+			else if(newNode.getKey() == x.getKey()) {
+				if (newNode.getP() >= x.getP()) {
 					x = x.getLeft();
-				} else {
+				}
+				else{
 					x = x.getRight();
 				}
-			} else {
+			}
+			else{
 				x = x.getRight();
 			}
 		}
-		z.setParent(y);
+		newNode.setParent(y);
 		if (y == this.getNILNode()) {
-			this.setRoot(z);
-			z.setColor(1);
-			z.setLeft(this.getNILNode());
-			z.setRight(this.getNILNode());
+			this.setRoot(newNode);
+			newNode.setColor(1);
+			newNode.setLeft(this.getNILNode());
+			newNode.setRight(this.getNILNode());
 			return;
-		} else if (z.getKey() < y.getKey()) {
-			y.setLeft(z);
-		} else if (z.getKey() == y.getKey()) {
-			if (z.getP() >= y.getP()) {
-				y.setLeft(z);
+		} else if (newNode.getKey() < y.getKey()) {
+			y.setLeft(newNode);
+		} else if (newNode.getKey() == y.getKey()) {
+			if (newNode.getP() >= y.getP()) {
+				y.setLeft(newNode);
 			} else {
-				y.setRight(z);
+				y.setRight(newNode);
 			}
 		} else {
-			y.setRight(z);
+			y.setRight(newNode);
 		}
-		z.setLeft(this.getNILNode());
-		z.setRight(this.getNILNode());
-		updateNodeValues(z);
-		RBInsertFixup(z);
+		newNode.setLeft(this.getNILNode());
+		newNode.setRight(this.getNILNode());
+		updateNodeValues(newNode);
+		RBInsertFixup(newNode);
 	}
 	
 	/**
-	 * Method to keep the red black tree in check with the required rules/properties
-	 * @param newNode node that needs to be checked, and maybe fixed
+	 * Method for keeping the RBT true to all of the necessary properties for a RBT
+	 * @param z Node to be fixed up
 	 */
 	public void RBInsertFixup(Node z) {
 		while (z.getParent().getColor() == 0) {
@@ -181,8 +180,8 @@ public class RBTree {
 	}
 	
 	/**
-	 * Method to rotate nodes to the left, around a given node
-	 * @param x node to specify where the rotation will occur
+	 * Rotates the nodes around the node x to the left
+	 * @param x Node used to determine where the rotation takes place
 	 */
 	public void LeftRotate(Node x) {
 		Node y = new Node();
@@ -207,8 +206,8 @@ public class RBTree {
 	}
 	
 	/**
-	 * Method to rotate nodes to the right, around a given node
-	 * @param x node to specify where the roation will occur
+	 * Method for rotating nodes around node x to the right
+	 * @param x Node used to determine where the rotation takes place
 	 */
 	public void RightRotate(Node x) {
 		Node y = new Node();
@@ -231,52 +230,70 @@ public class RBTree {
 		x.setParent(y);
 		updateNodeValues(x);
 	}
-	
+
 	/**
-	 * Method to update the endpoint max, value, and max value. This will be neccessary when a node is inserted or deleted
-	 * @param x Node where the update checks will start, and will traverse up the tree from there
+	 * This method is used for testing and it will traverse through the tree in order,
+	 * and it will print out everything about the node, just so we can see our code is working correctly
+	 * @param z is the root of the tree that we would like to see
+	 */
+	public void InOrderTraversal(Node z) {
+		if (z == this.getNILNode()) {
+			return;
+		}
+		InOrderTraversal(z.getLeft());
+		System.out.print("Key: " + z.getKey() + " Color: " + z.getColor());
+		if (z.getParent() == this.getNILNode())
+			System.out.print(" Parent: Nil Node");
+		else
+			System.out.print(" Parent: " + z.getParent().getKey());
+		if (z.getLeft() == this.getNILNode())
+			System.out.print(" Left: Nil Node");
+		else
+			System.out.print(" Left: " + z.getLeft().getKey());
+		if (z.getRight() == this.getNILNode())
+			System.out.println(" Right: Nil Node");
+		else
+			System.out.println(" Right: " + z.getRight().getKey());
+		System.out.print("\tP: " + z.getP() + " Val: " + z.getVal() + " Max Val: " + z.getMaxVal());
+		if (z.getEmax() == this.getNILNode().getEndpoint())
+			System.out.println(" Emax: Nil Node");
+		else
+			System.out.println(" Emax: " + z.getEmax().getValue());
+		InOrderTraversal(z.getRight());
+	}
+
+	/**
+	 * Method used for updating the emax, val, and maxval values of a node when a new node is inserted or deleted
+	 * @param x Used as the starting node and travels up the tree through recursive calls
 	 */
 	private void updateNodeValues(Node x) {
 		if(x == this.getNILNode()) {
 			x.setVal(0);
-			x.setMaxVal(0);
-			x.setEmax(this.getNILNode().getEmax());
+			x.setMaxValue(0);
+			x.setMax(this.getNILNode().getEmax());
 			x.setHeight(0);
 		} else {
 			x.setVal(x.getLeft().getVal() + x.getP() + x.getRight().getVal());
-			x.setMaxVal(Math.max(x.getLeft().getMaxVal(),
+			x.setMaxValue(Math.max(x.getLeft().getMaxVal(),
 					Math.max(x.getLeft().getVal() + x.getP(), x.getLeft().getVal() + x.getP() + x.getRight().getMaxVal())));
 			x.setHeight(Math.max(x.getLeft().getHeight(), x.getRight().getHeight()) + 1);
 			if(x.getLeft().getEmax() != this.getNILNode().getEmax() && x.getMaxVal() == x.getLeft().getMaxVal()) {
-				x.setEmax(x.getLeft().getEmax());
+				x.setMax(x.getLeft().getEmax());
 			} else if (x.getMaxVal() == (x.getLeft().getVal() + x.getP())) {
-				x.setEmax(x.getEndpoint());
+				x.setMax(x.getEndpoint());
 			} else if (x.getRight().getEmax() != this.getNILNode().getEmax() && x.getMaxVal() == (x.getLeft().getVal() + x.getP() + x.getRight().getMaxVal())) {
-				x.setEmax(x.getRight().getEmax());
+				x.setMax(x.getRight().getEmax());
 			} else {
-				x.setEmax(this.getNILNode().getEndpoint());
+				x.setMax(this.getNILNode().getEndpoint());
 			}
 			updateNodeValues(x.getParent());
 		}
 	}
 	
 	/**
-	 * Method to find the smallest node in a tree
-	 * @param x Starting node
-	 * @return the farthest left node within the subtree of x
-	 */
-	private Node Minimum(Node x){
-		Node z = x;
-		while(z.getLeft() != this.getNILNode()){
-			z = z.getLeft();
-		}
-		return z;
-	}
-	
-	/**
-	 * Method to move a subtree into a new position
-	 * @param y where the new subtree will be rooted
-	 * @param z Node representing the subtree to be moved
+	 * Method for shifting a subtree into a specified node position
+	 * @param u Position node
+	 * @param v Node to get the subtree that will move
 	 */
 	private void RBTransplant(Node u, Node v) {
 		if (u.getParent() == this.getNILNode()) {
@@ -292,8 +309,9 @@ public class RBTree {
 	}
 	
 	/**
-	 * Method to delete a node from a red black tree, followed by updating the tree
-	 * @param z Node that should be deleted
+	 * Method used for deleting a node from an RBT
+	 * It will fixup the tree and transplant nodes when needed
+	 * @param z Node to be deleted
 	 */
 	public void RBDeletion(Node z) {
 		Node y = z;
@@ -340,8 +358,8 @@ public class RBTree {
 	}
 	
 	/**
-	 * Method to keep the red black tree in check with the required rules/properties
-	 * @param x node that needs to be checked, and maybe fixed
+	 * Method for fixing the RBT after deletion so that it holds the properties of a RBT
+	 * @param x Node to be fixed up
 	 */
 	private void RBDeleteFixup(Node x) {
 		while (x != this.getRoot() && x.getColor() == 1) {
@@ -399,5 +417,18 @@ public class RBTree {
 			}
 		}
 		x.setColor(1);
+	}
+	
+	/**
+	 * Method for finding the minimum node in a subtree
+	 * @param x Node to start at
+	 * @return The leftmost Node starting from node x
+	 */
+	private Node Minimum(Node x) {
+		Node z = x;
+		while (z.getLeft() != this.getNILNode()) {
+			z = z.getLeft();
+		}
+		return z;
 	}
 }

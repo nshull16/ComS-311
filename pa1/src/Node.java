@@ -53,12 +53,13 @@ public class Node {
 		color = 0; 
 		val = 0;
 		maxVal = 0;
-		endpoint = new Endpoint(0,0);
-		emax = new Endpoint(0,0);
 		parent = null;
 		left = null;
 		right = null;
 		height = 0;
+		endpoint = new Endpoint(0,0);
+		this.endpoint.setNode(this);
+		emax = new Endpoint(0,0);
 	}
 	
 	/**
@@ -67,11 +68,11 @@ public class Node {
 	 */
 	public Node(Endpoint endpoint){
 		color = 0;
+		val = 0;
+		maxVal = 0;
 		parent = null;
 		left = null;
 		right = null;
-		val = 0;
-		maxVal = 0;
 		height = 0;
 		this.endpoint = endpoint;
 		this.endpoint.setNode(this);
@@ -107,8 +108,8 @@ public class Node {
 	 * Sets the value of the node
 	 * @param val Integer value to set the value of the node to
 	 */
-	public void setVal(int val){
-		this.val = val;
+	public void setVal(int value){
+		this.val = value;
 	}
 	
 	/**
@@ -121,10 +122,10 @@ public class Node {
 	
 	/**
 	 * Sets the maxValue of the node
-	 * @param maxVal the maxValue the node should be set to
+	 * @param maxValue the maxValue the node should be set to
 	 */
-	public void setMaxVal(int maxVal){
-		this.maxVal = maxVal;
+	public void setMaxValue(int maxvalue){
+		this.maxVal = maxvalue;
 	}
 	
 	/**
@@ -154,10 +155,10 @@ public class Node {
 	
 	/**
 	 * Sets the max value of the node
-	 * @param emax The endpoint to be used for calculating max
+	 * @param max The endpoint to be used for calculating max
 	 */
-	public void setEmax(Endpoint emax){
-		this.emax = emax;
+	public void setMax(Endpoint max){
+		this.emax = max;
 	}
 	
 	/**
