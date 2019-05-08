@@ -1,4 +1,8 @@
-
+/**
+ * Class that creates and maintains a red black tree
+ * @author Nathan Shull, Tyler Krueger
+ *
+ */
 public class RBTree {
 	/**
 	 * Root node of the tree
@@ -229,37 +233,6 @@ public class RBTree {
 		y.setRight(x);
 		x.setParent(y);
 		updateNodeValues(x);
-	}
-
-	/**
-	 * This method is used for testing and it will traverse through the tree in order,
-	 * and it will print out everything about the node, just so we can see our code is working correctly
-	 * @param z is the root of the tree that we would like to see
-	 */
-	public void InOrderTraversal(Node z) {
-		if (z == this.getNILNode()) {
-			return;
-		}
-		InOrderTraversal(z.getLeft());
-		System.out.print("Key: " + z.getKey() + " Color: " + z.getColor());
-		if (z.getParent() == this.getNILNode())
-			System.out.print(" Parent: Nil Node");
-		else
-			System.out.print(" Parent: " + z.getParent().getKey());
-		if (z.getLeft() == this.getNILNode())
-			System.out.print(" Left: Nil Node");
-		else
-			System.out.print(" Left: " + z.getLeft().getKey());
-		if (z.getRight() == this.getNILNode())
-			System.out.println(" Right: Nil Node");
-		else
-			System.out.println(" Right: " + z.getRight().getKey());
-		System.out.print("\tP: " + z.getP() + " Val: " + z.getVal() + " Max Val: " + z.getMaxVal());
-		if (z.getEmax() == this.getNILNode().getEndpoint())
-			System.out.println(" Emax: Nil Node");
-		else
-			System.out.println(" Emax: " + z.getEmax().getValue());
-		InOrderTraversal(z.getRight());
 	}
 
 	/**
